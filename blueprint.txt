@@ -1,0 +1,357 @@
+
+
+---
+
+# 🎬 PROJECT BLUEPRINT: “Tenant War Room”
+
+## 1. 🎯 Problem Statement (what your evaluator actually cares about)
+
+You don’t have a product until this is sharp:
+
+**User:**
+Students + young professionals living in PGs / hostels / rented flats
+
+**Problem:**
+Communication between tenants and landlords is:
+
+* fragmented (WhatsApp chaos)
+* unverifiable (“you never told me”)
+* unstructured (no priority, no tracking)
+
+**Impact:**
+
+* delayed repairs
+* deposit disputes
+* constant friction
+
+**Solution:**
+A **transparent issue tracking system for living spaces** where:
+
+* issues are logged
+* status is tracked
+* history is permanent
+
+This directly satisfies the “real-world non-trivial problem” requirement from your guidelines 
+Not a toy. Not a clone. Finally.
+
+---
+
+# 🎥 2. The “Movie” (User Flow Story)
+
+You wanted a director-level vision. Here:
+
+## Scene 1: Entry
+
+* User signs up
+* Chooses role:
+
+  * Tenant
+  * Landlord / Warden
+
+## Scene 2: Joining the “Building”
+
+* Tenant enters invite code
+* Lands in **Building Dashboard**
+
+## Scene 3: Conflict Begins
+
+* Water not working
+* Tenant logs issue:
+
+  * title
+  * category
+  * severity
+  * photo
+
+## Scene 4: Public Exposure
+
+* Issue appears in shared feed
+* Other tenants see it
+* No hiding anymore
+
+## Scene 5: Authority Responds
+
+* Landlord updates:
+
+  * “In progress”
+  * comment: “plumber at 5 PM”
+
+## Scene 6: Resolution
+
+* Issue marked resolved
+* History stays forever
+
+## Scene 7: Future Fight
+
+* Tenant leaving → deposit argument
+* Opens history
+* Pulls receipts
+* Wins
+
+That’s your product. Conflict → visibility → accountability.
+
+---
+
+# 🏗️ 3. Core Features (don’t overbuild like an idiot)
+
+## Feature 1: Issue System (MAIN ENGINE)
+
+* Create issue
+* Edit (only creator)
+* Delete (optional)
+* Status updates (admin only)
+
+## Feature 2: Comment Thread
+
+* Per issue discussion
+* timestamped
+* no editing (keep it real)
+
+## Feature 3: Role-Based Access
+
+* Tenant:
+
+  * create/view issues
+* Landlord:
+
+  * update status
+  * manage building
+
+## Feature 4: Building System
+
+* Join via code
+* One user → one building (keep it simple)
+
+## Feature 5: Dashboard
+
+* Filters:
+
+  * Open / Closed
+  * Category
+* Stats:
+
+  * issues this week
+  * most common problem
+
+---
+
+# ⚛️ 4. React Architecture (where most people mess up)
+
+If this is sloppy, your marks die.
+
+## Folder Structure (non-negotiable)
+
+```
+/components
+/pages
+/context
+/hooks
+/services
+/utils
+```
+
+---
+
+## State Design
+
+### Global (Context API)
+
+* user
+* role
+* buildingId
+
+### Local
+
+* issue forms
+* filters
+* UI state
+
+---
+
+## Must-use React Concepts (from guidelines )
+
+### Core
+
+* useState → forms, filters
+* useEffect → fetch issues
+* props → pass issue data
+
+### Intermediate
+
+* Context API → user + building
+* Routing →
+
+  * /login
+  * /dashboard
+  * /issue/:id
+  * /admin
+
+### Advanced (you want marks?)
+
+* useMemo → stats calculation
+* useCallback → avoid rerenders
+* lazy loading → pages
+
+---
+
+# 🧠 5. Data Model (stop improvising later)
+
+## Users
+
+```
+id
+name
+role (tenant / landlord)
+buildingId
+```
+
+## Buildings
+
+```
+id
+name
+inviteCode
+createdBy
+```
+
+## Issues
+
+```
+id
+title
+description
+category
+severity
+status
+createdBy
+buildingId
+createdAt
+```
+
+## Comments
+
+```
+id
+issueId
+userId
+text
+timestamp
+```
+
+---
+
+# 🔐 6. Backend (don’t overcomplicate)
+
+Pick one:
+
+### Option A: Firebase
+
+* Auth → login/signup
+* Firestore → data
+
+### Option B: Supabase
+
+* Auth + Postgres
+
+Either works. Don’t waste 3 days “choosing”.
+
+---
+
+# 🎨 7. UI/UX (keep it clean, not fancy)
+
+Use:
+
+* Tailwind
+
+Pages:
+
+## 1. Login / Signup
+
+## 2. Join Building
+
+## 3. Dashboard
+
+* issue list
+* filters
+
+## 4. Issue Detail Page
+
+## 5. Admin Panel
+
+Add:
+
+* loading states
+* empty states
+* error messages
+
+---
+
+# 🧪 8. Edge Cases (this is where you look smart)
+
+* user switches building → reset state
+* duplicate issue spam
+* unauthorized status update
+* network failure
+
+---
+
+# 📊 9. Evaluation Mapping (you care about marks, right?)
+
+| Criteria           | How you win          |
+| ------------------ | -------------------- |
+| Problem (15)       | real conflict system |
+| React (20)         | proper hooks usage   |
+| Advanced (15)      | useMemo + context    |
+| Backend (15)       | full CRUD + auth     |
+| UI (10)            | clean + usable       |
+| Code (10)          | structured           |
+| Functionality (10) | actually works       |
+| Demo (5)           | explain like a human |
+
+---
+
+# 🎬 10. Demo Script (don’t improvise this later)
+
+1. Problem (30 sec)
+2. Show login
+3. Create issue
+4. Show landlord resolving
+5. Show history
+6. Explain architecture briefly
+
+Done. No rambling.
+
+---
+
+# ⚠️ Brutal Reality Check
+
+Your biggest risks:
+
+* overengineering
+* abandoning halfway (your usual pattern)
+* spending time on UI instead of logic
+
+This project wins if:
+
+* issue system works flawlessly
+* roles are enforced properly
+* data persists cleanly
+
+Everything else is decoration.
+
+---
+
+# 🧭 Final Direction
+
+You don’t need brilliance here.
+You need **execution without distraction**.
+
+Build in this order:
+
+1. Auth
+2. Building join
+3. Issue CRUD
+4. Role logic
+5. UI polish
+
+If you deviate, you’ll end up with half a “cool idea” and zero working product.

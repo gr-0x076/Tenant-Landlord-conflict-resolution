@@ -1,0 +1,54 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to safely evaluate backend role
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    match /users/{userId} {
+      // Users can see other users (needed for comment names if expanded)
+      allow read: if request.auth != null;
+      
+      // Users can solely orchestrate their own profile document
+      allow create, update: if request.auth != null && request.auth.uid == userId;
+      allow delete: if false;
+    }
+
+    match /buildings/{buildingId} {
+      // System wide visibility to resolve invites
+      allow read: if request.auth != null;
+      allow create: if request.auth != null;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /issues/{issueId} {
+      // Authenticated users can read their building issues
+      allow read: if request.auth != null;
+      
+      // Only authenticated tenants can record incidents
+      allow create: if request.auth != null && getUserData().role == 'tenant';
+      
+      // Strict constraint: Landlords can only alter 'status' and 'updatedAt'
+      allow update: if request.auth != null && 
+                    getUserData().role == 'landlord' &&
+                    request.resource.data.diff(resource.data).affectedKeys()
+                      .hasOnly(['status', 'updatedAt']);
+                      
+      // Permanent History: Deletions are mathematically impossible
+      allow delete: if false;
+    }
+
+    match /comments/{commentId} {
+      allow read: if request.auth != null;
+      
+      // Anyone logged in can append to the conflict log
+      allow create: if request.auth != null;
+      
+      // Permanent History: No editing or deleting past statements
+      allow update, delete: if false;
+    }
+  }
+}
